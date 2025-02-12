@@ -1657,7 +1657,12 @@ def _read_buffers(
             face_materials = []
             for i, p in enumerate(current):
                 face_materials += [i] * len(p["faces"])
+            if all([mesh['visual'].uv is not None for mesh in current]):
+                uvs = np.vstack([mesh['visual'].uv for mesh in current])
+            else:
+                uvs = None
             visuals = visual.texture.TextureVisuals(
+                uv=uvs,
                 material=visual.material.MultiMaterial(materials=materials),
                 face_materials=face_materials,
             )
