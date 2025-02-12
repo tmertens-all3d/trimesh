@@ -130,6 +130,13 @@ class SceneGraph:
 
         # get the geometry at the final node if any
         geometry = self.transforms.node_data[frame_to].get("geometry")
+        if geometry is None:
+            # TM: Trying to solve a problem where the node name differs from the mesh name.
+            g_nodes = self.geometry_nodes
+            alt_frame_to = g_nodes[frame_to][0] if frame_to in g_nodes and len(g_nodes[frame_to]) > 0 else None
+            assert alt_frame_to is not None, f'Could not retrieve geometry for [{frame_to}]'
+            geometry = self.transforms.node_data[alt_frame_to].get("geometry")
+            frame_to = alt_frame_to
 
         # get a local reference to edge data
         data = self.transforms.edge_data
